@@ -1,96 +1,210 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* AuraCast Design System - Climatological Weather Platform */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-
-    --radius: 0.5rem;
-
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
-  }
-
-  .dark {
-    --background: 222.2 84% 4.9%;
+    /* AuraCast Color Palette */
+    --background: 222 84% 4.9%;
     --foreground: 210 40% 98%;
 
-    --card: 222.2 84% 4.9%;
+    --card: 222 84% 4.9%;
     --card-foreground: 210 40% 98%;
 
-    --popover: 222.2 84% 4.9%;
+    --popover: 222 84% 4.9%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    /* Brand Colors - Indigo to Cyan Gradient */
+    --primary: 238 94% 67%; /* Indigo-400 */
+    --primary-foreground: 210 40% 98%;
+    --primary-hover: 243 75% 58%; /* Indigo-500 */
+    --primary-glow: 238 94% 67%;
 
-    --secondary: 217.2 32.6% 17.5%;
+    --secondary: 217 32% 17%;
     --secondary-foreground: 210 40% 98%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 217 32% 17%;
+    --muted-foreground: 215 20% 65%;
 
-    --accent: 217.2 32.6% 17.5%;
+    --accent: 184 77% 59%; /* Cyan-400 */
     --accent-foreground: 210 40% 98%;
 
-    --destructive: 0 62.8% 30.6%;
+    /* Risk Level Colors */
+    --risk-low: 142 76% 36%; /* Green-600 */
+    --risk-low-bg: 142 71% 45%;
+    --risk-medium: 45 93% 47%; /* Amber-500 */
+    --risk-medium-bg: 48 96% 53%;
+    --risk-high: 0 84% 60%; /* Red-500 */
+    --risk-high-bg: 0 72% 51%;
+
+    /* Weather Condition Colors */
+    --weather-hot: 25 95% 53%; /* Orange-500 */
+    --weather-cold: 221 83% 53%; /* Blue-500 */
+    --weather-wind: 142 71% 45%; /* Green-500 */
+    --weather-rain: 221 83% 53%; /* Blue-500 */
+
+    --destructive: 0 84% 60%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --border: 217 32% 17%;
+    --input: 217 32% 17%;
+    --ring: 238 94% 67%;
+
+    --radius: 0.75rem;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
+    --gradient-aurora: linear-gradient(135deg, hsl(238 94% 67% / 0.2), hsl(184 77% 59% / 0.2));
+    --gradient-risk-low: linear-gradient(135deg, hsl(var(--risk-low)), hsl(var(--risk-low-bg)));
+    --gradient-risk-medium: linear-gradient(135deg, hsl(var(--risk-medium)), hsl(var(--risk-medium-bg)));
+    --gradient-risk-high: linear-gradient(135deg, hsl(var(--risk-high)), hsl(var(--risk-high-bg)));
+
+    /* Shadows */
+    --shadow-lg: 0 10px 25px -3px hsl(0 0% 0% / 0.1), 0 4px 6px -2px hsl(0 0% 0% / 0.05);
+    --shadow-aurora: 0 0 40px hsl(var(--primary-glow) / 0.3);
+    --shadow-card: 0 4px 20px hsl(0 0% 0% / 0.1);
+
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground font-inter antialiased;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+}
+
+@layer components {
+  /* Aurora Background Effect */
+  .aurora-bg {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .aurora-bg::before {
+    content: '';
+    position: absolute;
+    top: -20%;
+    left: -20%;
+    width: 60%;
+    height: 60%;
+    background: hsl(var(--primary) / 0.15);
+    border-radius: 50%;
+    filter: blur(60px);
+    animation: aurora-pulse 4s ease-in-out infinite;
+  }
+  
+  .aurora-bg::after {
+    content: '';
+    position: absolute;
+    bottom: -20%;
+    right: -20%;
+    width: 60%;
+    height: 60%;
+    background: hsl(var(--accent) / 0.15);
+    border-radius: 50%;
+    filter: blur(60px);
+    animation: aurora-pulse 6s ease-in-out infinite reverse;
+  }
+
+  /* Risk Level Indicators */
+  .risk-low {
+    background: var(--gradient-risk-low);
+    color: white;
+  }
+  
+  .risk-medium {
+    background: var(--gradient-risk-medium);
+    color: white;
+  }
+  
+  .risk-high {
+    background: var(--gradient-risk-high);
+    color: white;
+  }
+
+  /* Glass Morphism Effect */
+  .glass {
+    background: hsl(var(--card) / 0.8);
+    backdrop-filter: blur(12px);
+    border: 1px solid hsl(var(--border) / 0.2);
+  }
+
+  /* Gradient Text */
+  .gradient-text {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Interactive Elements */
+  .interactive-hover {
+    transition: var(--transition-smooth);
+  }
+  
+  .interactive-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-aurora);
+  }
+}
+
+@layer utilities {
+  /* Custom Animations */
+  @keyframes aurora-pulse {
+    0%, 100% {
+      opacity: 0.3;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.6;
+      transform: scale(1.1);
+    }
+  }
+  
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+  
+  @keyframes glow {
+    0%, 100% {
+      box-shadow: 0 0 20px hsl(var(--primary) / 0.3);
+    }
+    50% {
+      box-shadow: 0 0 40px hsl(var(--primary) / 0.6);
+    }
+  }
+
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+  
+  .animate-glow {
+    animation: glow 2s ease-in-out infinite;
+  }
+
+  /* Font Family */
+  .font-inter {
+    font-family: 'Inter', system-ui, sans-serif;
   }
 }
 
