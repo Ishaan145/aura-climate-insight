@@ -291,6 +291,34 @@ export const MOCK_DATA = {
       message: "The historical trend analysis is fascinating. Shows how climate change is affecting our local area over 30 years. Very eye-opening!",
       timestamp: "2024-09-22T11:20:00Z",
       likes: 31
+    },
+    {
+      id: 5,
+      user: "David Kim",
+      message: "As a construction project manager, this saves me thousands in weather contingency planning. The confidence scores are incredibly helpful for risk assessment.",
+      timestamp: "2024-09-22T12:05:00Z",
+      likes: 19
+    },
+    {
+      id: 6,
+      user: "Maria Rodriguez",
+      message: "Just planned my hiking expedition for next spring using the activity-specific weights. The temperature extreme analysis for high-altitude activities is perfect!",
+      timestamp: "2024-09-22T13:15:00Z",
+      likes: 15
+    },
+    {
+      id: 7,
+      user: "Alex Thompson",
+      message: "The climate change trend integration is brilliant. Shows +2.1°C warming in our region over 30 years - essential for long-term agricultural planning.",
+      timestamp: "2024-09-22T14:30:00Z",
+      likes: 28
+    },
+    {
+      id: 8,
+      user: "Jennifer Park",
+      message: "Fishing trip planner here! The wind pattern analysis is incredibly accurate. Saved me from a very rough day on the water last weekend.",
+      timestamp: "2024-09-22T15:45:00Z",
+      likes: 13
     }
   ],
 
@@ -315,6 +343,18 @@ export const MOCK_DATA = {
     {
       q: "How do you account for climate change?",
       a: "We integrate trend analysis showing how weather patterns have changed over decades. Our algorithm identifies statistically significant trends and incorporates them into future probability assessments."
+    },
+    {
+      q: "Why use statistical probability vs forecasting?",
+      a: "Weather forecasts become unreliable beyond 7-10 days due to chaos theory limitations. Statistical probability based on 30+ years of data provides reliable risk assessment for long-term planning, which is essential for outdoor events planned months in advance."
+    },
+    {
+      q: "How do you handle different climate regions?",
+      a: "We use hybrid thresholds combining absolute safety standards with location-specific percentiles. For example, 90°F is normal in Phoenix but extreme in Vermont. Our algorithm automatically adjusts risk scoring based on local climate norms."
+    },
+    {
+      q: "What's the minimum planning horizon?",
+      a: "While we can provide analysis for any date, our system excels at long-term planning (3-6+ months ahead) where traditional forecasts fail. For immediate planning (1-7 days), we recommend consulting meteorological forecasts alongside our risk assessment."
     }
   ],
 
