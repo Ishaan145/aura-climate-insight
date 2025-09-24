@@ -38,9 +38,20 @@ export const Header = () => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <div className="w-10 h-10 rounded-xl bg-gradient-primary flex items-center justify-center">
-              <span className="text-white font-bold text-lg">A</span>
-            </div>
+            <img 
+              src="https://github.com/Ishaan145/auracast/blob/main/frontend/team-logo.png?raw=true" 
+              alt="AuraCast Logo" 
+              className="w-10 h-10 rounded-xl shadow-lg"
+              onError={(e) => {
+                // Fallback to gradient background with 'A' if image fails to load
+                const target = e.target as HTMLImageElement;
+                target.style.display = 'none';
+                const fallback = document.createElement('div');
+                fallback.className = 'w-10 h-10 rounded-xl bg-gradient-primary flex items-center justify-center';
+                fallback.innerHTML = '<span class="text-white font-bold text-lg">A</span>';
+                target.parentNode?.insertBefore(fallback, target);
+              }}
+            />
             <span className="text-2xl font-bold gradient-text">
               AuraCast
             </span>
