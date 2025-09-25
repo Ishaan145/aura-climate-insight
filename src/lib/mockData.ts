@@ -363,27 +363,32 @@ export const MOCK_DATA = {
     hiking: {
       name: "Hiking",
       weights: { hot: 0.9, cold: 0.8, windy: 0.4, wet: 0.7 },
-      description: "High sensitivity to temperature extremes and precipitation"
+      description: "High sensitivity to temperature extremes and precipitation",
+      icon: "SunIcon"
     },
     wedding: {
       name: "Wedding",
       weights: { hot: 0.8, cold: 0.6, windy: 0.8, wet: 1.0 },
-      description: "Critical sensitivity to precipitation, high sensitivity to wind"
+      description: "Critical sensitivity to precipitation, high sensitivity to wind", 
+      icon: "CloudRainIcon"
     },
     fishing: {
       name: "Fishing",
       weights: { hot: 0.6, cold: 0.5, windy: 0.9, wet: 0.5 },
-      description: "Extremely sensitive to wind conditions for casting and boat control"
+      description: "Extremely sensitive to wind conditions for casting and boat control",
+      icon: "WindIcon"
     },
     construction: {
-      name: "Construction",
+      name: "Construction", 
       weights: { hot: 0.9, cold: 0.7, windy: 0.8, wet: 0.9 },
-      description: "High sensitivity to all conditions for worker safety"
+      description: "High sensitivity to all conditions for worker safety",
+      icon: "AlertIcon"
     },
     festival: {
       name: "Festival",
       weights: { hot: 0.7, cold: 0.5, windy: 0.6, wet: 0.9 },
-      description: "Critical precipitation sensitivity, moderate temperature tolerance"
+      description: "Critical precipitation sensitivity, moderate temperature tolerance",
+      icon: "SnowIcon"
     }
   }
 };

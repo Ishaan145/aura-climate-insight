@@ -214,7 +214,11 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
         zoom={zoom}
         scrollWheelZoom={false}
         className="w-full h-full z-0"
-        whenReady={setMapInstance}
+        ref={(mapInstance) => {
+          if (mapInstance) {
+            setMapInstance(mapInstance);
+          }
+        }}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
