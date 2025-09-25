@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Input } from './ui/input';
 import { Button } from './ui/button';
 import { Card, CardContent } from './ui/card';
-import { LocationIcon, SearchIcon, MapPinIcon } from './Icons';
+import { LocationIcon, SearchIcon } from './Icons';
 import { Badge } from './ui/badge';
 
 interface LocationSuggestion {
@@ -152,7 +152,7 @@ export const LocationInput: React.FC<LocationInputProps> = ({
           className="mt-2"
         >
           <Badge variant="secondary" className="text-xs">
-            <MapPinIcon className="w-3 h-3 mr-1" />
+            <LocationIcon className="w-3 h-3 mr-1" />
             {coordinates[0].toFixed(6)}, {coordinates[1].toFixed(6)}
           </Badge>
         </motion.div>
@@ -178,7 +178,7 @@ export const LocationInput: React.FC<LocationInputProps> = ({
                   whileTap={{ scale: 0.98 }}
                 >
                   <div className="flex items-center gap-2">
-                    <MapPinIcon className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                    <LocationIcon className="w-4 h-4 text-muted-foreground flex-shrink-0" />
                     <div className="flex-1 min-w-0">
                       <div className="font-medium truncate">{location.name}</div>
                       <div className="text-xs text-muted-foreground truncate">
