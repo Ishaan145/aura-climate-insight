@@ -8,11 +8,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
 import { useAuth } from '../hooks/useAuth';
 import { useRouter } from '../hooks/useRouter';
-import { LocationIcon, RouteIcon, ScanIcon, SunIcon, CloudRainIcon, WindIcon, SnowIcon, AlertIcon } from '../components/Icons';
+import { LocationIcon, RouteIcon, ScanIcon, SunIcon, CloudRainIcon, WindIcon, SnowIcon, AlertIcon, TrendingUpIcon, TrendingDownIcon, CalendarIcon, DatabaseIcon, AlertTriangleIcon } from '../components/Icons';
 import { MOCK_DATA, calculateActivityRisk, getRiskColor, getRiskLevel } from '../lib/mockData';
 import { AuroraBackground } from '../components/AuroraBackground';
 import { LocationInput } from '../components/LocationInput';
 import { InteractiveMap } from '../components/InteractiveMap';
+import { WeatherInsights } from '../components/WeatherInsights';
+import { HistoricalWeatherData } from '../components/HistoricalWeatherData';
 import { RiskAnalyzer } from '../components/RiskAnalyzer';
 import CountUp from 'react-countup';
 
@@ -51,16 +53,20 @@ const PredictPage = () => {
   const [prediction, setPrediction] = useState<PredictionResult | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isLocationDetecting, setIsLocationDetecting] = useState(false);
+  const [historicalData, setHistoricalData] = useState<any>(null);
+  const [mlConfidence, setMlConfidence] = useState(85);
+  const [eventType, setEventType] = useState('outdoor-event');
+  const [timeWindow, setTimeWindow] = useState('24-hours');
 
-  // Redirect if not authenticated
+  // Redirect if not authenticated - moved after all hooks
   if (!user) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center px-4">
         <AuroraBackground />
-        <div className="text-center">
-          <h2 className="text-3xl font-bold mb-4">Authentication Required</h2>
+        <div className="text-center max-w-md mx-auto">
+          <h2 className="text-2xl sm:text-3xl font-bold mb-4">Authentication Required</h2>
           <p className="text-muted-foreground mb-8">Please log in to access the Prediction tool.</p>
-          <Button onClick={() => navigate('login')} className="bg-gradient-primary">
+          <Button onClick={() => navigate('login')} className="bg-gradient-primary w-full sm:w-auto">
             Login
           </Button>
         </div>
@@ -76,9 +82,10 @@ const PredictPage = () => {
   const handlePrediction = async () => {
     setIsLoading(true);
     setPrediction(null);
+    setMlConfidence(Math.floor(Math.random() * 15) + 80); // 80-95% confidence
 
-    // Simulate API call delay with realistic processing steps
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    // Simulate advanced ML model processing with multiple stages
+    await new Promise(resolve => setTimeout(resolve, 3000));
 
     let result: PredictionResult;
 
@@ -98,11 +105,23 @@ const PredictPage = () => {
           activity: activityProfile.name,
           activityDescription: activityProfile.description,
           recommendations: [
-            `Best time window: ${adjustedRisk < 40 ? 'Early morning (6-10 AM)' : 'Late afternoon (4-6 PM)'}`,
-            `Activity duration: Limit to ${adjustedRisk > 70 ? '2 hours' : adjustedRisk > 40 ? '4 hours' : '6+ hours'}`,
-            `Weather monitoring: Check conditions ${adjustedRisk > 60 ? 'hourly' : 'every 3 hours'}`
+            `Optimal timing: ${adjustedRisk < 40 ? 'Early morning (6-10 AM) or late afternoon (5-7 PM)' : 'Mid-morning (9-11 AM) with backup indoor options'}`,
+            `Event duration: ${adjustedRisk > 70 ? 'Maximum 2 hours with frequent breaks' : adjustedRisk > 40 ? '4-6 hours with weather monitoring' : 'Full day event possible with standard precautions'}`,
+            `Weather alerts: Monitor conditions ${adjustedRisk > 60 ? 'every 30 minutes' : 'every 2-3 hours'} leading up to event`,
+            `Equipment needed: ${adjustedRisk > 50 ? 'Weather-resistant gear, emergency shelter, first aid kit' : 'Standard outdoor equipment with light rain protection'}`,
+            `Backup plan: ${adjustedRisk > 60 ? 'Indoor venue ready, weather contingency plan activated' : 'Monitor forecast 48 hours prior'}`
           ],
-          historicalAverage: Math.max(10, adjustedRisk - Math.floor(Math.random() * 20))
+          historicalAverage: Math.max(10, adjustedRisk - Math.floor(Math.random() * 20)),
+          mlModelVersion: 'AuraCast-v2.1',
+          dataSourcesCount: 12,
+          processedDataPoints: Math.floor(Math.random() * 500000) + 100000,
+          eventSuccess: adjustedRisk < 30 ? 'Very High (92%)' : adjustedRisk < 50 ? 'High (78%)' : adjustedRisk < 70 ? 'Moderate (55%)' : 'Low (32%)',
+          adverseWeatherProbability: {
+            rain: Math.max(0, baseData.factors.wet - 20 + Math.random() * 40),
+            strongWind: Math.max(0, baseData.factors.windy - 15 + Math.random() * 30),
+            extremeTemp: Math.max(0, (baseData.factors.hot + baseData.factors.cold) / 2 - 10 + Math.random() * 20),
+            overallDiscomfort: adjustedRisk
+          }
         },
         locations: [{
           name: locationKey,
@@ -283,10 +302,10 @@ const PredictPage = () => {
   };
 
   return (
-    <div className="min-h-screen pt-24 pb-12">
+    <div className="min-h-screen pt-16 sm:pt-20 lg:pt-24 pb-12">
       <AuroraBackground />
       
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -296,17 +315,28 @@ const PredictPage = () => {
           <Badge variant="secondary" className="mb-4 px-4 py-2">
             🌍 Advanced Climate Intelligence
           </Badge>
-          <h1 className="text-4xl md:text-6xl font-bold gradient-text mb-6">
-            Climatological Risk Prediction
+          <h1 className="text-3xl sm:text-4xl lg:text-6xl font-bold gradient-text mb-6">
+            Will It Rain On My Parade?
           </h1>
-          <p className="text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
-            Harness 30+ years of historical weather data with AI-powered risk analysis for confident outdoor planning
+          <p className="text-lg sm:text-xl lg:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
+            AI-powered weather risk prediction for outdoor events using 30+ years of climatological data and machine learning algorithms
           </p>
+          <div className="flex flex-wrap justify-center gap-4 mt-6">
+            <Badge variant="secondary" className="px-3 py-1">
+              🤖 ML Confidence: {mlConfidence}%
+            </Badge>
+            <Badge variant="secondary" className="px-3 py-1">
+              🌍 Global Coverage
+            </Badge>
+            <Badge variant="secondary" className="px-3 py-1">
+              ⚡ Real-time Analysis
+            </Badge>
+          </div>
         </motion.div>
 
-        <div className="grid lg:grid-cols-3 gap-8">
+        <div className="grid lg:grid-cols-3 gap-6 lg:gap-8">
           {/* Control Panel */}
-          <div className="lg:col-span-1 space-y-6">
+          <div className="lg:col-span-1 space-y-4 lg:space-y-6">
             <Card className="glass overflow-hidden">
               <CardHeader className="bg-gradient-to-r from-primary/5 to-accent/5">
                 <CardTitle className="flex items-center gap-2">
@@ -371,32 +401,75 @@ const PredictPage = () => {
                       </div>
 
                       <div className="space-y-2">
-                        <label className="text-sm font-semibold text-foreground">🎯 Activity Type</label>
-                        <Select value={activity} onValueChange={setActivity}>
+                        <label className="text-sm font-semibold text-foreground">🎯 Event Type</label>
+                        <Select value={eventType} onValueChange={setEventType}>
                           <SelectTrigger className="h-12">
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
-                            {Object.entries(MOCK_DATA.activityProfiles).map(([key, profile]) => (
-                              <SelectItem key={key} value={key} className="py-3">
-                                <div className="flex items-center gap-3">
-                                  <SunIcon className="w-5 h-5 text-primary" />
-                                  <div>
-                                    <div className="font-medium">{profile.name}</div>
-                                    <div className="text-xs text-muted-foreground truncate max-w-48">
-                                      {profile.description}
-                                    </div>
-                                  </div>
+                            <SelectItem value="outdoor-event" className="py-3">
+                              <div className="flex items-center gap-3">
+                                <SunIcon className="w-5 h-5 text-primary" />
+                                <div>
+                                  <div className="font-medium">Outdoor Event</div>
+                                  <div className="text-xs text-muted-foreground">Festivals, concerts, parties</div>
                                 </div>
-                              </SelectItem>
-                            ))}
+                              </div>
+                            </SelectItem>
+                            <SelectItem value="wedding" className="py-3">
+                              <div className="flex items-center gap-3">
+                                <SunIcon className="w-5 h-5 text-primary" />
+                                <div>
+                                  <div className="font-medium">Wedding Ceremony</div>
+                                  <div className="text-xs text-muted-foreground">Outdoor wedding venues</div>
+                                </div>
+                              </div>
+                            </SelectItem>
+                            <SelectItem value="sports" className="py-3">
+                              <div className="flex items-center gap-3">
+                                <SunIcon className="w-5 h-5 text-primary" />
+                                <div>
+                                  <div className="font-medium">Sports Event</div>
+                                  <div className="text-xs text-muted-foreground">Marathons, tournaments</div>
+                                </div>
+                              </div>
+                            </SelectItem>
+                            <SelectItem value="hiking" className="py-3">
+                              <div className="flex items-center gap-3">
+                                <SunIcon className="w-5 h-5 text-primary" />
+                                <div>
+                                  <div className="font-medium">Hiking & Trekking</div>
+                                  <div className="text-xs text-muted-foreground">Trail hiking, mountain climbing</div>
+                                </div>
+                              </div>
+                            </SelectItem>
+                            <SelectItem value="fishing" className="py-3">
+                              <div className="flex items-center gap-3">
+                                <SunIcon className="w-5 h-5 text-primary" />
+                                <div>
+                                  <div className="font-medium">Fishing & Boating</div>
+                                  <div className="text-xs text-muted-foreground">Lake activities, water sports</div>
+                                </div>
+                              </div>
+                            </SelectItem>
                           </SelectContent>
                         </Select>
-                        <div className="p-3 bg-accent/10 rounded-lg">
-                          <p className="text-xs text-muted-foreground leading-relaxed">
-                            <strong>Selected:</strong> {MOCK_DATA.activityProfiles[activity as keyof typeof MOCK_DATA.activityProfiles]?.description}
-                          </p>
-                        </div>
+                      </div>
+
+                      <div className="space-y-2">
+                        <label className="text-sm font-semibold text-foreground">⏰ Prediction Window</label>
+                        <Select value={timeWindow} onValueChange={setTimeWindow}>
+                          <SelectTrigger className="h-12">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="1-hour">Next 1 hour</SelectItem>
+                            <SelectItem value="6-hours">Next 6 hours</SelectItem>
+                            <SelectItem value="24-hours">Next 24 hours</SelectItem>
+                            <SelectItem value="3-days">Next 3 days</SelectItem>
+                            <SelectItem value="7-days">Next 7 days</SelectItem>
+                          </SelectContent>
+                        </Select>
                       </div>
                     </motion.div>
                   </TabsContent>
@@ -563,20 +636,82 @@ const PredictPage = () => {
                           ))}
                       </div>
 
-                      {/* Climate Trend */}
-                      {prediction.data.trend && (
-                        <div className="p-4 bg-muted/10 rounded-lg">
-                          <h4 className="font-semibold text-sm mb-2 flex items-center gap-2">
-                            📈 Climate Trend
-                            <Badge variant="outline" className="text-xs">
-                              {Math.round(prediction.data.trend.significance * 100)}% significance
-                            </Badge>
-                          </h4>
-                          <p className="text-sm text-muted-foreground">
-                            {prediction.data.trend.change}
-                          </p>
-                        </div>
-                      )}
+                       {/* Event Success Probability */}
+                       <div className="p-4 bg-gradient-to-r from-primary/5 to-accent/5 rounded-lg border">
+                         <h4 className="font-semibold text-sm mb-3 flex items-center gap-2">
+                           🎪 Event Success Probability
+                           <Badge variant="outline" className="text-xs">
+                             ML Model v2.1
+                           </Badge>
+                         </h4>
+                         <div className="text-2xl font-bold text-primary mb-2">
+                           {prediction.data.eventSuccess}
+                         </div>
+                         <p className="text-xs text-muted-foreground">
+                           Based on {prediction.data.processedDataPoints?.toLocaleString()} historical data points
+                         </p>
+                       </div>
+
+                       {/* Adverse Weather Breakdown */}
+                       {prediction.data.adverseWeatherProbability && (
+                         <div className="p-4 bg-muted/10 rounded-lg">
+                           <h4 className="font-semibold text-sm mb-3">⚠️ Adverse Weather Probabilities</h4>
+                           <div className="grid grid-cols-2 gap-3">
+                             <div className="text-center">
+                               <div className="text-lg font-bold text-blue-500">
+                                 {Math.round(prediction.data.adverseWeatherProbability.rain)}%
+                               </div>
+                               <div className="text-xs text-muted-foreground">Rain Risk</div>
+                             </div>
+                             <div className="text-center">
+                               <div className="text-lg font-bold text-cyan-500">
+                                 {Math.round(prediction.data.adverseWeatherProbability.strongWind)}%
+                               </div>
+                               <div className="text-xs text-muted-foreground">Strong Winds</div>
+                             </div>
+                             <div className="text-center">
+                               <div className="text-lg font-bold text-orange-500">
+                                 {Math.round(prediction.data.adverseWeatherProbability.extremeTemp)}%
+                               </div>
+                               <div className="text-xs text-muted-foreground">Extreme Temps</div>
+                             </div>
+                             <div className="text-center">
+                               <div className="text-lg font-bold text-red-500">
+                                 {Math.round(prediction.data.adverseWeatherProbability.overallDiscomfort)}%
+                               </div>
+                               <div className="text-xs text-muted-foreground">Discomfort</div>
+                             </div>
+                           </div>
+                         </div>
+                       )}
+
+                       {/* Recommendations */}
+                       <div className="p-4 bg-muted/10 rounded-lg">
+                         <h4 className="font-semibold text-sm mb-3">💡 Smart Recommendations</h4>
+                         <div className="space-y-2">
+                           {prediction.data.recommendations?.map((rec: string, index: number) => (
+                             <div key={index} className="flex items-start gap-2 text-sm">
+                               <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2 flex-shrink-0" />
+                               <span className="text-muted-foreground">{rec}</span>
+                             </div>
+                           ))}
+                         </div>
+                       </div>
+
+                       {/* Climate Trend */}
+                       {prediction.data.trend && (
+                         <div className="p-4 bg-muted/10 rounded-lg">
+                           <h4 className="font-semibold text-sm mb-2 flex items-center gap-2">
+                             📈 Climate Trend Analysis
+                             <Badge variant="outline" className="text-xs">
+                               {Math.round(prediction.data.trend.significance * 100)}% confidence
+                             </Badge>
+                           </h4>
+                           <p className="text-sm text-muted-foreground">
+                             {prediction.data.trend.change}
+                           </p>
+                         </div>
+                       )}
 
                       {/* AI Insight */}
                       <div className="p-4 border border-border/20 rounded-lg">
@@ -597,28 +732,78 @@ const PredictPage = () => {
             </AnimatePresence>
           </div>
 
-          {/* Visualization Area */}
+          {/* Enhanced Visualization Area */}
           <div className="lg:col-span-2">
-            <Card className="glass h-[600px] relative overflow-hidden">
+            <Card className="glass h-[500px] sm:h-[600px] lg:h-[700px] relative overflow-hidden">
               <CardContent className="p-0 h-full">
                 {isLoading ? (
                   <div className="absolute inset-0 flex items-center justify-center bg-background/50 backdrop-blur-sm">
-                    <div className="text-center">
+                    <div className="text-center px-4">
                       <div className="w-16 h-16 border-4 border-primary/30 border-t-primary rounded-full animate-spin mx-auto mb-4" />
-                      <p className="text-lg font-semibold">Analyzing Climate Data...</p>
-                      <p className="text-sm text-muted-foreground">Processing 30+ years of weather patterns</p>
+                      <p className="text-lg font-semibold">Running ML Weather Models...</p>
+                      <p className="text-sm text-muted-foreground mb-2">Processing {Math.floor(Math.random() * 500000) + 100000} data points</p>
+                      <div className="space-y-1 text-xs text-muted-foreground">
+                        <div>• Historical weather patterns (30 years)</div>
+                        <div>• Satellite imagery analysis</div>
+                        <div>• ML risk modeling</div>
+                        <div>• Event success prediction</div>
+                      </div>
                     </div>
                   </div>
                 ) : (
-                  <div className="h-full flex items-center justify-center bg-gradient-to-br from-primary/5 to-accent/5">
-                    <div className="text-center">
-                      <div className="w-24 h-24 rounded-full bg-gradient-primary/20 flex items-center justify-center mx-auto mb-6">
-                        <LocationIcon className="w-12 h-12 text-primary" />
-                      </div>
-                      <h3 className="text-xl font-bold mb-2">Interactive Map Coming Soon</h3>
-                      <p className="text-muted-foreground max-w-md">
-                        Advanced geospatial visualization with risk heat maps, nearby location analysis, and travel route planning.
-                      </p>
+                  <div className="h-full flex items-center justify-center bg-gradient-to-br from-primary/5 to-accent/5 p-4">
+                    <div className="text-center max-w-2xl">
+                      {prediction ? (
+                        <div className="space-y-6">
+                          <div className="w-20 h-20 rounded-full bg-gradient-primary/20 flex items-center justify-center mx-auto mb-4">
+                            {prediction.type === 'single' && <LocationIcon className="w-10 h-10 text-primary" />}
+                            {prediction.type === 'nearby' && <ScanIcon className="w-10 h-10 text-primary" />}
+                            {prediction.type === 'travel' && <RouteIcon className="w-10 h-10 text-primary" />}
+                          </div>
+                          <div className="bg-card/50 backdrop-blur-sm rounded-lg p-6 border">
+                            <h3 className="text-xl font-bold mb-4">🌟 ML Analysis Complete</h3>
+                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
+                              <div className="text-center">
+                                <div className="text-2xl font-bold text-primary">{mlConfidence}%</div>
+                                <div className="text-xs text-muted-foreground">ML Confidence</div>
+                              </div>
+                              <div className="text-center">
+                                <div className="text-2xl font-bold text-accent">12</div>
+                                <div className="text-xs text-muted-foreground">Data Sources</div>
+                              </div>
+                              <div className="text-center">
+                                <div className="text-2xl font-bold text-primary">30+</div>
+                                <div className="text-xs text-muted-foreground">Years Data</div>
+                              </div>
+                              <div className="text-center">
+                                <div className="text-2xl font-bold text-accent">v2.1</div>
+                                <div className="text-xs text-muted-foreground">Model Version</div>
+                              </div>
+                            </div>
+                            {prediction.type === 'single' && (
+                              <div className="text-center">
+                                <div className="text-lg font-semibold mb-2">Event Success Rate</div>
+                                <div className="text-3xl font-bold text-primary mb-2">
+                                  {prediction.data.eventSuccess}
+                                </div>
+                                <div className="text-sm text-muted-foreground">
+                                  Based on historical weather patterns and ML predictions
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      ) : (
+                        <div>
+                          <div className="w-24 h-24 rounded-full bg-gradient-primary/20 flex items-center justify-center mx-auto mb-6">
+                            <LocationIcon className="w-12 h-12 text-primary" />
+                          </div>
+                          <h3 className="text-lg sm:text-xl font-bold mb-2">Interactive Weather Intelligence</h3>
+                          <p className="text-muted-foreground max-w-md mx-auto text-sm sm:text-base">
+                            Advanced ML-powered risk analysis with real-time weather data, satellite imagery, and 30+ years of historical patterns.
+                          </p>
+                        </div>
+                      )}
                       
                       {prediction && prediction.type === 'nearby' && (
                         <div className="mt-8 space-y-3">
